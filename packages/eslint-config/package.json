@@ -1,0 +1,11 @@
+{
+  "name": "@factuflow/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "base.js",
+  "files": [
+    "base.js",
+    "next.js",
+    "nest.js"
+  ]
+}
