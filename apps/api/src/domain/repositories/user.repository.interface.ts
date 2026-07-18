@@ -8,10 +8,16 @@
 
 import type { User } from '../entities';
 
-export interface UserRepository {
-  findById(id: string): Promise<User | null>;
-  findByEmail(email: string): Promise<User | null>;
-  create(user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User>;
-  update(id: string, data: Partial<User>): Promise<User>;
-  delete(id: string): Promise<void>;
+export interface CreateUserInput {
+  email: string;
+  passwordHash: string;
+  firstName: string;
+  lastName: string;
 }
+
+export interface IUserRepository {
+  createUser(data: CreateUserInput): Promise<User>;
+}
+
+// ─── Token for NestJS DI ───────────────────────────────────────────────────────
+export const IUSER_REPOSITORY_TOKEN = Symbol('IUserRepository');
