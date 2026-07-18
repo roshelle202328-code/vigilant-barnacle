@@ -20,6 +20,35 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
+    return this.toDomain(prismaUser);
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const prismaUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!prismaUser) {
+      return null;
+    }
+
+    return this.toDomain(prismaUser);
+  }
+
+  // ─── Private helpers ─────────────────────────────────────────────────────────
+
+  private toDomain(prismaUser: {
+    id: string;
+    email: string;
+    passwordHash: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl: string | null;
+    emailVerified: boolean;
+    active: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  }): User {
     return new User(
       prismaUser.id,
       prismaUser.email,
