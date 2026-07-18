@@ -15,7 +15,7 @@ import { IUSER_REPOSITORY_TOKEN } from '@/domain/repositories/user.repository.in
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_ACCESS_SECRET'),
         signOptions: {
-          expiresIn: configService.get<string>('JWT_ACCESS_EXPIRES_IN', '15m'),
+          expiresIn: 60 * 15, // 15 minutes
         },
       }),
     }),
