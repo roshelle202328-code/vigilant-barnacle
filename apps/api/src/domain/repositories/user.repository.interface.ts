@@ -17,6 +17,7 @@ export interface CreateUserInput {
 
 export interface IUserRepository {
   createUser(data: CreateUserInput): Promise<User>;
+  findByEmail(email: string): Promise<User | null>;
 }
 
 // ─── Token for NestJS DI ───────────────────────────────────────────────────────
