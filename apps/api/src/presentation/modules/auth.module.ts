@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from '@/presentation/controllers/auth.controller';
 import { RegisterCommand } from '@/application/commands/register/register.command';
 import { LoginCommand } from '@/application/commands/login/login.command';
+import { RefreshCommand } from '@/application/commands/refresh/refresh.command';
+import { LogoutCommand } from '@/application/commands/logout/logout.command';
 import { PrismaUserRepository } from '@/infrastructure/persistence/prisma/repositories/user.repository';
 import { IUSER_REPOSITORY_TOKEN } from '@/domain/repositories/user.repository.interface';
 
@@ -24,6 +26,8 @@ import { IUSER_REPOSITORY_TOKEN } from '@/domain/repositories/user.repository.in
   providers: [
     RegisterCommand,
     LoginCommand,
+    RefreshCommand,
+    LogoutCommand,
     {
       provide: IUSER_REPOSITORY_TOKEN,
       useClass: PrismaUserRepository,
