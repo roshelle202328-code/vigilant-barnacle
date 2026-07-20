@@ -97,7 +97,7 @@ model RefreshToken {
 
 model EmailVerificationToken {
   id        String    @id @default(uuid()) @db.Uuid
-  token     String    @db.VarChar(255)
+  token     String    @unique @db.VarChar(255)
   userId    String    @map("user_id") @db.Uuid
   expiresAt DateTime  @map("expires_at") @db.Timestamptz()
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
@@ -110,7 +110,7 @@ model EmailVerificationToken {
 
 model PasswordResetToken {
   id        String    @id @default(uuid()) @db.Uuid
-  token     String    @db.VarChar(255)
+  token     String    @unique @db.VarChar(255)
   userId    String    @map("user_id") @db.Uuid
   expiresAt DateTime  @map("expires_at") @db.Timestamptz()
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
