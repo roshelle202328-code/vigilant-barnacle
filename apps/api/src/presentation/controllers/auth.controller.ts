@@ -1,4 +1,5 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 import {
   ApiTags,
   ApiOperation,
@@ -24,6 +25,7 @@ import { RefreshDto, LogoutDto } from '@/application/dtos/auth/refresh.dto';
 import { VerifyEmailDto } from '@/application/dtos/auth/verify-email.dto';
 import { ForgotPasswordDto } from '@/application/dtos/auth/forgot-password.dto';
 import { ResetPasswordDto } from '@/application/dtos/auth/reset-password.dto';
+import { JwtAuthGuard } from '@/presentation/guards/jwt-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -134,5 +136,17 @@ export class AuthController {
   ): Promise<{ message: string }> {
     await this.resetPasswordCommand.execute(dto.token, dto.newPassword);
     return { message: 'Password reset successful' };
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get current authenticated user' })
+  @ApiOkResponse({
+    description: 'Current user info extracted from JWT',
+  })
+  @ApiUnauthorizedResponse({ description: 'Missing or invalid JWT token' })
+  getMe(@Req() req: Request) {
+    return req.user;
   }
 }
