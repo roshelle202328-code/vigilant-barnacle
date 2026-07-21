@@ -4,9 +4,10 @@ import { HealthModule } from './modules/health.module';
 import { AuthModule } from './modules/auth.module';
 import { CompanyModule } from './modules/company.module';
 import { ClientModule } from './modules/client.module';
+import { ProductModule } from './modules/product.module';
 
 @Module({
-  imports: [InfrastructureModule, HealthModule, AuthModule, CompanyModule, ClientModule],
+  imports: [InfrastructureModule, HealthModule, AuthModule, CompanyModule, ClientModule, ProductModule],
   exports: [HealthModule],
 })
 export class PresentationModule {}
