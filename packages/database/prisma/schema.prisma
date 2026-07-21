@@ -19,6 +19,12 @@ enum UserRole {
   EMPLOYEE
 }
 
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+}
+
 enum SubscriptionTier {
   STARTER
   PRO
@@ -44,6 +50,7 @@ model User {
   refreshTokens          RefreshToken[]
   emailVerificationTokens EmailVerificationToken[]
   passwordResetTokens    PasswordResetToken[]
+  sentInvitations        Invitation[]       @relation("InvitedBy")
 
   @@map("users")
 }
@@ -64,6 +71,7 @@ model Company {
 
   // Relations
   roles UserCompanyRole[]
+  invitations Invitation[]
 
   @@map("companies")
 }
@@ -133,4 +141,22 @@ model AuditLog {
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
   @@map("audit_logs")
+}
+
+model Invitation {
+  id         String           @id @default(uuid()) @db.Uuid
+  email      String           @db.VarChar(255)
+  companyId  String           @map("company_id") @db.Uuid
+  role       UserRole
+  invitedById String          @map("invited_by_id") @db.Uuid
+  token      String           @unique @db.VarChar(255)
+  status     InvitationStatus @default(PENDING)
+  expiresAt  DateTime         @map("expires_at") @db.Timestamptz()
+  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  company  Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invitedBy User   @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([companyId, email])
+  @@map("invitations")
 }
