@@ -31,6 +31,11 @@ enum SubscriptionTier {
   ENTERPRISE
 }
 
+enum ClientType {
+  PERSONA_FISICA
+  PERSONA_MORAL
+}
+
 // ─── Core Auth Tables ─────────────────────────────────────────────────────────
 
 model User {
@@ -70,8 +75,9 @@ model Company {
   updatedAt        DateTime         @updatedAt @map("updated_at") @db.Timestamptz()
 
   // Relations
-  roles UserCompanyRole[]
+  roles     UserCompanyRole[]
   invitations Invitation[]
+  clients   Client[]
 
   @@map("companies")
 }
@@ -159,4 +165,27 @@ model Invitation {
 
   @@index([companyId, email])
   @@map("invitations")
+}
+
+model Client {
+  id          String     @id @default(uuid()) @db.Uuid
+  companyId   String     @map("company_id") @db.Uuid
+  type        ClientType
+  firstName   String?    @map("first_name") @db.VarChar(100)
+  lastName    String?    @map("last_name") @db.VarChar(100)
+  businessName String?   @map("business_name") @db.VarChar(255)
+  taxId       String     @map("tax_id") @db.VarChar(50)
+  email       String?    @db.VarChar(255)
+  phone       String?    @db.VarChar(30)
+  address     String?    @db.Text
+  notes       String?    @db.Text
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt   DateTime   @updatedAt @map("updated_at") @db.Timestamptz()
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, taxId])
+  @@map("clients")
 }
